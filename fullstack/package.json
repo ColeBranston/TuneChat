@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next-auth/typeorm-legacy-adapter": "^2.0.2",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
+    "pg": "^8.12.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "typeorm": "^0.3.7",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@types/node": "^20",
