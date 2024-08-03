@@ -6,7 +6,6 @@ export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [email, setEmail] = useState('');
-    const [isEmailSet, setIsEmailSet] = useState(false);
     const [chatroom, setChatroom] = useState('');
     const wsRef = useRef(null);
 
@@ -17,7 +16,6 @@ export default function Chat() {
     }, [chatroom]);
 
     useEffect(() => {
-        if (isEmailSet) {
             const socket = new WebSocket('ws://localhost:8080/ws');
     
             socket.onopen = () => {
@@ -47,8 +45,7 @@ export default function Chat() {
                     socket.close();
                 }
             };
-        }
-    }, [isEmailSet, email]);
+    }, []);
 
     const sendMessage = (input) => {
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && input.trim()) {
