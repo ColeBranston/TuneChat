@@ -7,33 +7,51 @@ export default function Chat() {
     const [input, setInput] = useState('');
     const [email, setEmail] = useState('');
     const [isEmailSet, setIsEmailSet] = useState(false);
+    const [chatroom, setChatroom] = useState('');
     const wsRef = useRef(null);
+
+    // Log chatroom changes
+    useEffect(() => {
+        console.log("\n\n Chatroom \n ------------------------ \n");
+        console.log(chatroom + "\n------------------------\n\n");
+    }, [chatroom]);
 
     useEffect(() => {
         if (isEmailSet) {
             const socket = new WebSocket('ws://localhost:8080/ws');
-            
+    
             socket.onopen = () => {
                 console.log('Connected to WebSocket');
                 socket.send(JSON.stringify({ type: 'join', email }));
             };
-
-            socket.onmessage = (event) => {
+    
+            socket.onmessage = async (event) => {
                 console.log('Received message:', event.data);
                 const newMessage = JSON.parse(event.data);
+                console.log(newMessage);
+                await fetch('http://localhost:3000/api/chat', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "email": email,
+                        "message": newMessage
+                    })
+                });
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
             };
-
+    
             socket.onerror = (error) => {
                 console.error('WebSocket error:', error);
             };
-
+    
             socket.onclose = () => {
                 console.log('Disconnected from WebSocket');
             };
-
+    
             wsRef.current = socket;
-
+    
             return () => {
                 if (socket.readyState === WebSocket.OPEN) {
                     socket.close();
@@ -50,10 +68,40 @@ export default function Chat() {
         }
     };
 
-    const handleEmailSubmit = (e) => {
+    const getChatroom = async () => {
+        console.log("getting chatroom...")
+        try {
+            const response = await fetch(`http://localhost:3000/api/getChatRoom?email=${encodeURIComponent(email)}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json" // Optional for GET requests
+                }
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Response Data:", data);
+    
+                const chatroom = data.chatroom; // Ensure this matches the backend response
+                setChatroom(chatroom);
+    
+                console.log("The Chatroom is", chatroom);
+            } else {
+                console.error("Something went wrong with your GET request:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error fetching chatroom:", error);
+        }
+    };
+    
+
+    const handleEmailSubmit = async (e) => {
         e.preventDefault();
         if (email.trim()) {
+            console.log(email);
             setIsEmailSet(true);
+            await getChatroom();
+            console.log("The chatroom is", chatroom);
         }
     };
 
