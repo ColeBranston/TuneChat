@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@next-auth/typeorm-legacy-adapter": "^2.0.2",
+    "mongoose": "^8.5.2",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
     "pg": "^8.12.0",

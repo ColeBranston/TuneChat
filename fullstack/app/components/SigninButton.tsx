@@ -19,7 +19,7 @@ const SigninButton = () => {
                         <h2 className="text-xl mb-4 text-black">{session.user.name}</h2>
                         <button onClick={() => {signOut(); toggleModal();}} className="px-4 py-2 bg-red-600 text-white rounded">
                             Sign out
-                        </button>
+                        </button>     
                     </div>
                 )}
             </div>
