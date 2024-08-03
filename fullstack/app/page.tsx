@@ -11,22 +11,6 @@ export default function Home() {
   const [userData, setUserData] = useState<User[]>([]);
   const [newUser, setNewUser] = useState<string>("");
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/users");
-        if (!response.ok) throw new Error(JSON.stringify(response));
-        console.log("response", response);
-        const data = await response.json();
-        console.log("data", data);
-        setUserData(data.users);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchUsers();
-  }, []);
-
   const handleNewUser = async () => {
     try {
       const response = await fetch("http://localhost:3000/api/users", {

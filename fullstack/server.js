@@ -1,29 +1,37 @@
 const WebSocket = require('ws');
 
+async function fetchWrapper(...args) {
+    const fetch = await import('node-fetch');
+    return fetch.default(...args);
+}
+
 const wss = new WebSocket.Server({ port: 8080, path: '/ws' });
 
 function parseMessage(messageStr){
     for(let i = 0; i < messageStr.length; i++){
-        if(messageStr[i] == "|"){
-            return [messageStr.substring(0,i), messageStr.substring(i+1)];
+        if(messageStr[i] === "|"){
+            return [messageStr.substring(0, i), messageStr.substring(i + 1)];
         }
     }
 }
 
-async function postMessage(messageStr){
-    arr = parseMessage(messageStr);
-    email = messageStr[0];
-    message = messageStr[1];
-    console.log("Email: " + email);
-    console.log("Message: " + message);
-    await fetch('http://localhost:3000/api/chat', {
+async function postMessage(messageObj){
+    if (messageObj.type === 'join') {
+        return; // Ignore join messages
+    }
+    console.log("messageObj", messageObj);
+    const arr = parseMessage(messageObj);
+    console.log("arr", arr);
+    const email = arr[0];
+    const message = arr[1];
+    await fetchWrapper('http://localhost:3000/api/chat', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             "email": email,
-            "message": newMessage
+            "message": message
         })
     });
 }
@@ -33,9 +41,10 @@ wss.on('connection', (ws) => {
     
     ws.on('message', (message) => {
         console.log('Received message:', message.toString());
-        postMessage(message.toString());
+        const messageObj = message.toString();
+        postMessage(messageObj);
         wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
+            if (client.readyState === WebSocket.OPEN && messageObj.type !== 'join') {
                 client.send(message.toString());
             }
         });
