@@ -1,9 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import SpotifyProvider from 'next-auth/providers/spotify';
-import { query } from '../../../../db';
-import NextAuth from 'next-auth/next';
-import GoogleProvider from "next-auth/providers/google";
 import uuid from 'uuidv4';
 
 const handler = NextAuth({
