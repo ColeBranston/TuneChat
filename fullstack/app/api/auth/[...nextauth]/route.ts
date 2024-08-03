@@ -3,6 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import SpotifyProvider from 'next-auth/providers/spotify';
 const mongoose = require('mongoose');
 const User = require('../../../schemas/User');
+const Chatroom = require('../../../schemas/Chatroom');
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -44,7 +45,9 @@ const handler = NextAuth({
       const userExists = await User.findOne({id:id});
       if(!userExists){
         const userExists = new User({email: email, id: id, profile_pic: profile_pic})
-        await userExists.save()
+        // const chatroom = new Chatroom();
+        // await chatroom.save();
+        await userExists.save();
       }
     },
   },
