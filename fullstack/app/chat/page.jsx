@@ -26,34 +26,38 @@ export default function Chat() {
     }, [chatroom]);
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8080/ws');
-
-        socket.onopen = () => {
-            console.log('Connected to WebSocket');
-            fetchData(session.user.email);
-        };
-
-        socket.onmessage = async (event) => {
-            console.log('Received message:', event.data);
-            fetchData(session.user.email);
-        };
-
-        socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-
-        socket.onclose = () => {
-            console.log('Disconnected from WebSocket');
-        };
-
-        wsRef.current = socket;
-
-        return () => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.close();
-            }
-        };
-    }, []);
+        if (session) {
+            setEmail(session.user.email);
+    
+            const socket = new WebSocket('ws://localhost:8080/ws');
+    
+            socket.onopen = () => {
+                console.log('Connected to WebSocket');
+                fetchData(session.user.email);
+            };
+    
+            socket.onmessage = async (event) => {
+                console.log('Received message:', event.data);
+                fetchData(session.user.email);
+            };
+    
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+    
+            socket.onclose = () => {
+                console.log('Disconnected from WebSocket');
+            };
+    
+            wsRef.current = socket;
+    
+            return () => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.close();
+                }
+            };
+        }
+    }, [session]);
 
     const sendMessage = (input) => {
         console.log("input", input);
