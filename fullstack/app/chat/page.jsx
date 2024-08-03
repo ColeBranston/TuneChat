@@ -29,16 +29,6 @@ export default function Chat() {
                 console.log('Received message:', event.data);
                 const newMessage = JSON.parse(event.data);
                 console.log(newMessage);
-                await fetch('http://localhost:3000/api/chat', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        "email": email,
-                        "message": newMessage
-                    })
-                });
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
             };
     
