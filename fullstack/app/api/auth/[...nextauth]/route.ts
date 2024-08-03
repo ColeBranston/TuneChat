@@ -1,6 +1,10 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import SpotifyProvider from 'next-auth/providers/spotify';
+const mongoose = require('mongoose');
+const User = require('../../../schemas/User');
+
+mongoose.connect(process.env.MONGODB_URI);
 
 const handler = NextAuth({
   providers: [
@@ -9,8 +13,8 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
     }),
     SpotifyProvider({
-      clientId: process.env.SPOTIFY_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      clientId: process.env.SPOTIFY_CLIENT_ID ?? '',
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET ?? '',
       authorization: {
         params: {
           scope: 'user-read-email user-read-private',
@@ -26,22 +30,22 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
+      (session as any).accessToken = token?.accessToken ?? null;
       return session;
     },
   },
   events: {
     signIn: async (user, account, profile) => {
-      const { email } = user;
-      console.log(profile);
+      const email = user?.user?.email;
+      const id = user?.user?.id;
+      const profile_pic = user?.profile?.image;
+      console.log("\n\n" + email + "\n\n" + id + "\n\n" + profile_pic);
 
-      const result = await query(`SELECT * FROM users WHERE email = '${email}'`);
-      if (result.length > 0) {
-        console.log('Result exists');
-      } else {
-        console.log('Result does not exist');
+      const userExists = await User.findOne({id:id});
+      if(!userExists){
+        const userExists = new User({email: email, id: id, profile_pic: profile_pic})
+        await userExists.save()
       }
-      console.log(result); // Do something with the query result
     },
   },
 });
