@@ -94,7 +94,7 @@ export default function Chat() {
             <h1 style={{ color: 'red' }}>Global Chat Room</h1>
             <div style={{ border: '1px solid red', height: '300px', overflowY: 'auto', padding: '10px' }}>
                 {messages.map((msg, index) => {
-                    const [email, message] = msg.split('||');
+                    const [email, message] = msg.split('|');
                     return (
                         <div key={index} style={{ color: 'red' }}>
                             <strong>{email}:</strong> {message}
