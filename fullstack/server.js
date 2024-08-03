@@ -2,6 +2,14 @@ const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 8080, path: '/ws' });
 
+function parseMessage(messageStr){
+    for(let i = 0; i < messageStr.length; i++){
+        if(messageStr[i] == "|"){
+            return [messageStr[0:i], messageStr[i+1:]];
+        }
+    }
+}
+
 wss.on('connection', (ws) => {
     console.log('New client connected');
     

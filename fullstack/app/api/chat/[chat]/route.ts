@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+const User = require('../../../schemas/User');
 const Chatroom = require('../../../schemas/Chatroom');
 
 mongoose.connect(process.env.MONGODB_URI as string);
@@ -6,7 +7,7 @@ mongoose.connect(process.env.MONGODB_URI as string);
 export async function GET(req: Request) {
     try {
         const url = new URL(req.url);
-        const email = url.searchParams.get('email'); // Extract email from query parameters
+        const email = url.pathname.split('/')[3]; // Extract email from query parameters
 
         if (!email) {
             return new Response(
@@ -25,11 +26,16 @@ export async function GET(req: Request) {
         }
 
         console.log('User:', user);
-        console.log('Chatroom:', user.chatroom);
+        console.log('Chat Room:', user.chatroom);
+
+        const chatroom = await Chatroom.findOne({chatroom:user.chatroom})
+        console.log(chatroom);
+
+        const chat_history_arr = Array.from(chatroom.chat_history);
 
         // Assuming user.chatroom contains the chatroom ID or relevant data
         return new Response(
-            JSON.stringify({ message: user.chatroom }), 
+            JSON.stringify({ message: chat_history_arr }), 
             { status: 200, headers: { 'Content-Type': 'application/json' } }
         );
 

@@ -68,31 +68,31 @@ export default function Chat() {
         }
     };
 
-    const getChatroom = async () => {
-        console.log("getting chatroom...")
-        try {
-            const response = await fetch(`http://localhost:3000/api/getChatRoom?email=${encodeURIComponent(email)}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json" // Optional for GET requests
-                }
-            });
+    // const getChatroom = async () => {
+    //     console.log("getting chatroom...")
+    //     try {
+    //         const response = await fetch(`http://localhost:3000/api/getChatRoom?email=${encodeURIComponent(email)}`, {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json" // Optional for GET requests
+    //             }
+    //         });
     
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Response Data:", data);
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             console.log("Response Data:", data);
     
-                const chatroom = data.chatroom; // Ensure this matches the backend response
-                setChatroom(chatroom);
+    //             const chatroom = data.chatroom; // Ensure this matches the backend response
+    //             setChatroom(chatroom);
     
-                console.log("The Chatroom is", chatroom);
-            } else {
-                console.error("Something went wrong with your GET request:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error fetching chatroom:", error);
-        }
-    };
+    //             console.log("The Chatroom is", chatroom);
+    //         } else {
+    //             console.error("Something went wrong with your GET request:", response.statusText);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching chatroom:", error);
+    //     }
+    // };
     
 
     const handleEmailSubmit = async (e) => {
@@ -100,8 +100,8 @@ export default function Chat() {
         if (email.trim()) {
             console.log(email);
             setIsEmailSet(true);
-            await getChatroom();
-            console.log("The chatroom is", chatroom);
+            // await getChatroom();
+            // console.log("The chatroom is", chatroom);
         }
     };
 
