@@ -10,8 +10,15 @@ export default function Chat() {
     const [email, setEmail] = useState('');
     const [chatroom, setChatroom] = useState('');
     const wsRef = useRef(null);
+    const messagesEndRef = useRef(null);
 
     const { data: session } = useSession();
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(scrollToBottom, [messages]);
 
     // Set the email state when the session data is available
     useEffect(() => {
@@ -91,38 +98,48 @@ export default function Chat() {
     };
 
     return (
-        <div className='min-h-screen flex flex-col justify-between bg-red-50'> 
-            <div>          
-                <h1 className='font-sans text-4xl h-[100%] bg-red-400 text-white p-2'>Global Chat Room</h1>
-                <Link href="/" className='text-[15px] ml-[10px] mt-[5px] cursor-pointer bg-red-50 text-black'>← Back to home</Link>
+        <div className='h-screen flex flex-col bg-red-50'> 
+            <div className='flex-shrink-0'>          
+                <h1 className='font-sans text-4xl bg-red-400 text-white p-4'>Global Chat Room</h1>
+                <Link href="/" className='inline-block text-sm ml-4 mt-2 mb-2 text-red-600 hover:text-red-800'>← Back to home</Link>
             </div>    
-            <div className="border-l border-r border-red-800 p-2">
-                {messages.map((msg, index) => {
-                    const [email, message] = msg.split('|');
-                    return (
-                        <div key={index} style={{ color: 'red' }}>
-                            <strong>{email}:</strong> {message}
-                        </div>
-                    );
-                })}
+            <div className="flex-grow overflow-y-auto px-4 py-2">
+                <div className="flex flex-col space-y-4">
+                    {messages.map((msg, index) => {
+                        const [email, message] = msg.split('|');
+                        const isOwnMessage = email === session?.user?.email;
+
+                        return (
+                            <div key={index} className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+                                <div className={`max-w-[70%] break-words ${isOwnMessage ? 'bg-red-400 text-white' : 'bg-gray-200 text-black'} rounded-[20px] px-4 py-2 ${isOwnMessage ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}>
+                                    <p>{message}</p>
+                                </div>
+                                <p className="text-xs mt-1 text-gray-500">{email}</p>
+                            </div>
+                        );
+                    })}
+                    <div ref={messagesEndRef} />
+                </div>
             </div>
-            <div className='h-[100px] flex items-center bg-red-400 mb-[64px]'>
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter') sendMessage(input);
-                    }}
-                    placeholder="Type in chat..."
-                    className='focus: outline-none w-[80%] ml-[20px] pl-[15px] rounded-l-[3px] border-none text-black border h-[50px] border-red-800 '
-                />
-                <button 
-                    onClick={() => sendMessage(input)} 
-                    className='text-xl text-red-600 h-[50px] flex items-center bg-red-100 p-3 rounded-r-[3px]'
-                >
-                    Send
-                </button>
+            <div className='flex-shrink-0 bg-red-400 p-4'>
+                <div className='flex items-center max-w-4xl mx-auto'>
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') sendMessage(input);
+                        }}
+                        placeholder="Type your message..."
+                        className='flex-grow focus:outline-none rounded-l-full py-2 px-4 text-black'
+                    />
+                    <button 
+                        onClick={() => sendMessage(input)} 
+                        className='bg-red-600 text-white rounded-r-full px-6 py-2 hover:bg-red-700 transition duration-300'
+                    >
+                        Send
+                    </button>
+                </div>
             </div>
         </div>
     );
