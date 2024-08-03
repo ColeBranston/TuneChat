@@ -40,11 +40,12 @@ const handler = NextAuth({
       const email = user?.user?.email;
       const id = user?.user?.id;
       const profile_pic = user?.profile?.image;
+      const chatroom = "a434dbc0-7933-4cd9-be42-46b4f280ddef"
       console.log("\n\n" + email + "\n\n" + id + "\n\n" + profile_pic);
 
       const userExists = await User.findOne({id:id});
       if(!userExists){
-        const userExists = new User({email: email, id: id, profile_pic: profile_pic})
+        const userExists = new User({email: email, id: id, profile_pic: profile_pic, chatroom: chatroom});
         // const chatroom = new Chatroom();
         // await chatroom.save();
         await userExists.save();
