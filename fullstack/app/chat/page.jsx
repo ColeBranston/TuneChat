@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
 
 export default function Chat() {
     const [messages, setMessages] = useState([]);
@@ -114,26 +115,36 @@ export default function Chat() {
     };
 
     return (
-        <div>
-            <h1 style={{ color: 'red' }}>Global Chat Room</h1>
-            <div style={{ border: '1px solid red', height: '300px', overflowY: 'auto', padding: '10px' }}>
+        <div className='min-h-screen flex flex-col justify-between bg-red-50'> 
+            <div>          
+                <h1 className='font-sans text-4xl h-[100%] bg-red-400 text-white p-2'>Global Chat Room</h1>
+                <Link href="/" className='text-[15px] ml-[10px] mt-[5px] cursor-pointer bg-red-50 text-black'>← Back to home</Link>
+            </div>    
+            <div className="border-l border-r border-red-800 p-2">
                 {messages.map((msg, index) => (
                     <div key={index} style={{ color: 'red' }}>
                         <strong>{msg.email}:</strong> {msg.message}
                     </div>
                 ))}
             </div>
-            <input 
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => {
-                    if (e.key === 'Enter') sendMessage(input);
-                }}
-                placeholder="Type a message..."
-                style={{ color: 'red' }}
-            />
-            <button onClick={() => sendMessage(input)} style={{ color: 'red' }}>Send</button>
+            <div className='h-[100px] flex items-center bg-red-400 mb-[64px]'>
+                <input 
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') sendMessage(input);
+                    }}
+                    placeholder="Type in chat..."
+                    className='focus: outline-none w-[80%] ml-[20px] pl-[15px] rounded-l-[3px] border-none text-black border h-[50px] border-red-800 '
+                />
+                <button 
+                    onClick={() => sendMessage(input)} 
+                    className='text-xl text-red-600 h-[50px] flex items-center bg-red-100 p-3 rounded-r-[3px]'
+                >
+                    Send
+                </button>
+            </div>
         </div>
     );
 }
