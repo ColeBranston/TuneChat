@@ -113,22 +113,6 @@ export default function Chat() {
         }
     };
 
-    if (!isEmailSet) {
-        return (
-            <form onSubmit={handleEmailSubmit}>
-                <input
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                    style={{ color: 'red' }}
-                />
-                <button type="submit" style={{ color: 'red' }}>Join Chat</button>
-            </form>
-        );
-    }
-
     return (
         <div>
             <h1 style={{ color: 'red' }}>Global Chat Room</h1>
