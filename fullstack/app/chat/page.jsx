@@ -12,6 +12,13 @@ export default function Chat() {
 
     const { data: session } = useSession();
 
+    // Set the email state when the session data is available
+    useEffect(() => {
+        if (session) {
+            setEmail(session.user.email);
+        }
+    }, [session]);
+
     // Log chatroom changes
     useEffect(() => {
         console.log("\n\n Chatroom \n ------------------------ \n");
@@ -19,42 +26,37 @@ export default function Chat() {
     }, [chatroom]);
 
     useEffect(() => {
-        if (session) {
-            setEmail(session.user.email);
+        const socket = new WebSocket('ws://localhost:8080/ws');
 
-            const socket = new WebSocket('ws://localhost:8080/ws');
+        socket.onopen = () => {
+            console.log('Connected to WebSocket');
+            fetchData(session.user.email);
+        };
 
-            socket.onopen = () => {
-                console.log('Connected to WebSocket');
-                socket.send(JSON.stringify({ type: 'join', email: session.user.email }));
-            };
+        socket.onmessage = async (event) => {
+            console.log('Received message:', event.data);
+            fetchData(session.user.email);
+        };
 
-            socket.onmessage = async (event) => {
-                console.log('Received message:', event.data);
-                const newMessage = JSON.parse(event.data);
-                console.log(newMessage);
-                fetchData(session.user.email);
-            };
+        socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
 
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
+        socket.onclose = () => {
+            console.log('Disconnected from WebSocket');
+        };
 
-            socket.onclose = () => {
-                console.log('Disconnected from WebSocket');
-            };
+        wsRef.current = socket;
 
-            wsRef.current = socket;
-
-            return () => {
-                if (socket.readyState === WebSocket.OPEN) {
-                    socket.close();
-                }
-            };
-        }
-    }, [session]);
+        return () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.close();
+            }
+        };
+    }, []);
 
     const sendMessage = (input) => {
+        console.log("input", input);
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && input.trim()) {
             const message = `${email}|${input.trim()}`;
             wsRef.current.send(message);
@@ -63,7 +65,7 @@ export default function Chat() {
     };
 
     const fetchData = async (email) => {
-        console.log("fetching data ...")
+        console.log("fetching data ...");
         try {
             const response = await fetch(`http://localhost:3000/api/chat/${email}`, {
                 method: "GET",
@@ -81,7 +83,7 @@ export default function Chat() {
         } catch (error) {
             console.error("Error fetching data:", error);
         }
-    }
+    };
 
     return (
         <div>
