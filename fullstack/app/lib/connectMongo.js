@@ -1,35 +1,19 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const connectMongo = async () => {
+  if (!process.env.MONGO_URI) {
+    throw new Error('Please define the MONGO_URI environment variable inside .env.local');
+  }
 
-if (!MONGODB_URI) {
-    throw new Error("No MongoDB URI provided");
-}
+  if (mongoose.connections[0].readyState) {
+    return;
+  }
 
-let cached = global.mongoose;
-if (!cached) {
-    cached = global.mongoose = { connection: null, promise: null };
-}
-
-async function connectMongo() {
-    if (cached.connection) {
-        return cached.connection;
-    }
-
-    if (!cached.promise) {
-        cached.promise = mongoose.connect("mongodb+srv://xtyao2015:vUcA0ecOplEa944a@tune-chat.zsycdmp.mongodb.net/?retryWrites=true&w=majority&appName=tune-chat").then((mongoose) => mongoose);
-    }
-
-    try {
-        cached.connection = await cached.promise;
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        cached.promise = null;
-        console.error("Error connecting to MongoDB:", error);
-        throw new Error("Error when connecting to MongoDB");
-    }
-
-    return cached.connection;
-}
+  await mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log('Connected to MongoDB');
+};
 
 export default connectMongo;

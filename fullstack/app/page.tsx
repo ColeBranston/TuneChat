@@ -1,13 +1,14 @@
 "use client";
 import Image from "next/image";
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
 import Link from 'next/link';
->>>>>>> 6b824ca8a56079727e6b8e43db98bd5df28bb95f
 
+interface User { // change later
+  name: string;
+  messages: string
+}
 export default function Home() {
-  const [userData, setUserData] = useState<string[]>([]);
+  const [userData, setUserData] = useState<User[]>([]);
   const [newUser, setNewUser] = useState<string>("");
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function Home() {
         console.log("response", response);
         const data = await response.json();
         console.log("data", data);
-        setUserData(data);
+        setUserData(data.users);
       } catch (error) {
         console.error(error);
       }
@@ -67,7 +68,8 @@ export default function Home() {
         {userData.map((user, index) => {
           return (
             <div key={`${user}-${index}`}>
-              <p>{user}</p>
+              <p>Name: {user.name}</p>
+              <p>Message: {user.messages}</p>
             </div>
           );
         })}
