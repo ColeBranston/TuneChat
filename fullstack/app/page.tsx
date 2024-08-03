@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -107,6 +108,10 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+      </div>
+      <div>
+        <h1>Welcome to the Chat App</h1>
+        <Link href="/chat">Go to Chat Rooms</Link>
       </div>
     </main>
   );
