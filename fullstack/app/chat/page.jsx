@@ -14,6 +14,10 @@ export default function Chat() {
 
     const { data: session } = useSession();
 
+    useEffect(() => {
+        fetchData(session.user.email);
+    }, [session])
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
