@@ -1,6 +1,10 @@
 "use client";
 import Image from "next/image";
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
+=======
+import Link from 'next/link';
+>>>>>>> 6b824ca8a56079727e6b8e43db98bd5df28bb95f
 
 export default function Home() {
   const [userData, setUserData] = useState<string[]>([]);
@@ -120,6 +124,10 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+      </div>
+      <div>
+        <h1>Welcome to the Chat App</h1>
+        <Link href="/chat">Go to Chat Rooms</Link>
       </div>
     </main>
   );

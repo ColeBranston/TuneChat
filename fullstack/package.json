@@ -4,20 +4,25 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "start-server": "node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "npm rn start-server & next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@next-auth/typeorm-legacy-adapter": "^2.0.2",
     "mongoose": "^8.5.2",
+    "isomorphic-ws": "^5.0.0",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
     "pg": "^8.12.0",
     "react": "^18",
     "react-dom": "^18",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "typeorm": "^0.3.7",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/node": "^20",
