@@ -29,7 +29,7 @@ export default function Chat() {
                 console.log('Received message:', event.data);
                 const newMessage = JSON.parse(event.data);
                 console.log(newMessage);
-                setMessages((prevMessages) => [...prevMessages, newMessage]);
+                fetchData(email);
             };
     
             socket.onerror = (error) => {
@@ -50,13 +50,34 @@ export default function Chat() {
         }
     }, [isEmailSet, email]);
 
-    const sendMessage = () => {
+    const sendMessage = (input) => {
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && input.trim()) {
-            const message = { type: 'message', email, content: input.trim() };
-            wsRef.current.send(JSON.stringify(message));
+            const message = `${email}|${input.trim()}`;
+            wsRef.current.send(message);
             setInput('');
         }
     };
+
+    const fetchData = async (email) => {
+        console.log("fetching data ...")
+        try {
+            const response = await fetch(`http://localhost:3000/api/chat/${email}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if(response.ok) {
+                const data = await response.json();
+                console.log("Response Data:", data);
+
+                const messages = data.message;
+                setMessages(messages);
+            }
+        } catch(error) {
+            console.error("Error fetching data:", error);
+        }
+    }
 
     // const getChatroom = async () => {
     //     console.log("getting chatroom...")
@@ -117,8 +138,7 @@ export default function Chat() {
             <div style={{ border: '1px solid red', height: '300px', overflowY: 'auto', padding: '10px' }}>
                 {messages.map((msg, index) => (
                     <div key={index} style={{ color: 'red' }}>
-                        {msg.type === 'join' && <em>{msg.email} has joined the chat</em>}
-                        {msg.type === 'message' && <><strong>{msg.email}:</strong> {msg.content}</>}
+                        <strong>{msg.email}:</strong> {msg.message}
                     </div>
                 ))}
             </div>
@@ -127,12 +147,12 @@ export default function Chat() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => {
-                    if (e.key === 'Enter') sendMessage();
+                    if (e.key === 'Enter') sendMessage(input);
                 }}
                 placeholder="Type a message..."
                 style={{ color: 'red' }}
             />
-            <button onClick={sendMessage} style={{ color: 'red' }}>Send</button>
+            <button onClick={() => sendMessage(input)} style={{ color: 'red' }}>Send</button>
         </div>
     );
 }
