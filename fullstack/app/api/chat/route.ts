@@ -27,7 +27,8 @@ export async function POST(req: Request) {
             return new Response(JSON.stringify({ message: 'Chatroom not found' }), { status: 404 });
         }
 
-        chatroom.chat_history.push(email + "|" + message.content);
+
+        chatroom.chat_history.push(email + "|" + message);
         await chatroom.save();
 
         return new Response(JSON.stringify({ message: 'Message added to chat history' }), { status: 200 });
