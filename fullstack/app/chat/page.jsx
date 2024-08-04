@@ -112,13 +112,15 @@ export default function Chat() {
                     {messages.map((msg, index) => {
                         const [email, message] = msg.split('|');
                         const isOwnMessage = email === session?.user?.email;
+                        const displayEmailArr = email.split('@');
+                        const displayEmail = displayEmailArr[0];
 
                         return (
                             <div key={index} className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+                                <p className="text-xs mt-1 text-gray-500">{displayEmail}</p>
                                 <div className={`max-w-[70%] break-words ${isOwnMessage ? 'bg-red-400 text-white' : 'bg-gray-200 text-black'} rounded-[20px] px-4 py-2 ${isOwnMessage ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}>
                                     <p>{message}</p>
                                 </div>
-                                <p className="text-xs mt-1 text-gray-500">{email}</p>
                             </div>
                         );
                     })}
