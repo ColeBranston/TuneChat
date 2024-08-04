@@ -33,11 +33,11 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen bg-gradient-to-r from-red-50 to-red-200 flex-col items-center justify-between p-24">
-      <div className="flex flex-col gap-[10px]">
-        <h1 className="text-5xl font-sans">Welcome to TuneChat</h1>
-        {session? <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>: null}
-        <Image src={logo1} alt="Logo" width={100} />
-      </div>
+        <div className="flex flex-col items-center justify-center gap-[10px]">
+            <h1 className="text-5xl font-sans">Welcome to TuneChat</h1>
+            {session? <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>: null}
+            <Image src={logo1} alt="Logo" width={250} className="transition-transform duration-500 ease-in-out transform hover:scale-110" />
+        </div>
     </main>
   );
 }
