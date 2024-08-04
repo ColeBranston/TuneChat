@@ -9,9 +9,7 @@ const Appbar = () => {
     return (
         <header className="flex justify-between items-center pl-4 pr-4 pu-1 pd-1 bg-gradient-to-b from-white to-red-100 shadow">
             <Link href="/">
-                <a>
-                    <Image src={logo1} alt="Logo" width={70} />
-                </a>
+                <Image src={logo1} alt="Logo" width={70} />
             </Link>
             <SigninButton />
         </header>
