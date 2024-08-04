@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import DefaultImage from "../../public/defualt_profile.png"
 
 const SigninButton = () => {
   const { data: session } = useSession();
@@ -15,7 +17,11 @@ const SigninButton = () => {
   if (session && session.user) {
     return (
       <div className="relative flex gap-4 ml-auto">
-        <img onClick={toggleModal} src={session.user.image || "fullstack\public\defualt_profile.png"} alt="User profile" className="w-8 h-8 rounded-full cursor-pointer" />
+        {session.user.image ?
+                <img onClick={toggleModal} src={session.user.image} alt="User profile" className="w-8 h-8 rounded-full cursor-pointer" /> :
+                 <Image onClick={toggleModal} src={DefaultImage} alt="Default profile" className="w-8 h-8 rounded-full cursor-pointer" />
+                }
+        
         {showModal && (
           <div className="absolute top-full right-0 mt-2 bg-white p-4 rounded shadow-lg w-40 flex flex-col items-center justify-center">
             <h2 className="text-xl mb-4 text-black">{session.user.name}</h2>
