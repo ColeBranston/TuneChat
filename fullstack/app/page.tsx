@@ -5,6 +5,8 @@ import logo1 from '../public/logo1.png';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import Search from "./components/Search";
+import MusicModule from './components/MusicModule';
+
 interface User { // change later
   name: string;
   messages: string
@@ -14,7 +16,6 @@ export default function Home() {
   const [newUser, setNewUser] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [song, setSong] = useState<string>(""); // song to search
-
   const { data: session } = useSession();
   const accessToken = session?.accessToken;
   

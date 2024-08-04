@@ -98,7 +98,6 @@ const handler = NextAuth({
       console.log('SignIn event triggered');
       const email = user.email;
       const id = user.id;
-      const chatroom = "a434dbc0-7933-4cd9-be42-46b4f280ddef";
       
       try {
         const spotifyUserInfo = await fetchSpotifyUserInfo(account.access_token);
@@ -112,7 +111,7 @@ const handler = NextAuth({
         
         const userExists = await User.findOne({ id });
         if (!userExists) {
-          const newUser = new User({ email, id, profile_pic, chatroom });
+          const newUser = new User({ email, id, profile_pic });
           await newUser.save();
         }
       } catch (error) {
