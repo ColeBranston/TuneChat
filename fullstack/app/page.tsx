@@ -16,8 +16,11 @@ export default function Home() {
   const [song, setSong] = useState<string>(""); // song to search
 
   const { data: session } = useSession();
+  const accessToken = session?.accessToken;
+  
 
   const handleNewUser = async () => {
+    
     try {
       const response = await fetch("http://localhost:3000/api/users", {
         method: "POST",
@@ -33,18 +36,45 @@ export default function Home() {
     }
   };
 
-  const handleSearch = () => {
-    // do api call to spotify api to get searhc adn then setSong to the returned song
-    // setSong(song)
-  }
+  const handleSearch = async () => {
+    console.log(accessToken);
+    const api = `https://api.spotify.com/v1/search?q=${encodeURIComponent(search)}&type=track`;
+    
+    try {
+      const response = await fetch(api, {
+        method: "GET",
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        }
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("\n\nResponse Data:\n\n");
+        console.log(data);
+        
+        // You can now work with the data, for example:
+        if (data.tracks && data.tracks.items.length > 0) {
+          const firstTrack = data.tracks.items[0];
+          setSong(firstTrack.name);
+          console.log("First track name:", firstTrack.name);
+        }
+      } else {
+        console.error("Spotify API request failed:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching data from Spotify API:", error);
+    }
+  };
 
   return (
     <main className="flex min-h-screen bg-gradient-to-r from-red-50 to-red-200 flex-col items-center justify-between p-24">
       <div className="flex flex-col gap-[10px]">
-        <h1 className="text-5xl font-sans mt-40">Welcome to TuneChat</h1>
+        <h1 className="text-5xl font-sans mt-40 text-black">Welcome to TuneChat</h1>
         {session && (
           <>
-            <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>
+            { song ? <Link className="text-2xl text-black font-sans cursor-pointer" href="/chat">→ Go to Chat Rooms</Link> : <p className="text-2xl font-sans opacity-20">→ Go to Chat Rooms</p>}
             <Search search={search} setSearch={setSearch} handleSearch={handleSearch} />
           </>
         )}
