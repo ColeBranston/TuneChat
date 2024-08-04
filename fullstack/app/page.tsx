@@ -71,10 +71,10 @@ export default function Home() {
   return (
     <main className="flex min-h-screen bg-gradient-to-r from-red-50 to-red-200 flex-col items-center justify-between p-24">
       <div className="flex flex-col gap-[10px]">
-        <h1 className="text-5xl font-sans mt-40">Welcome to TuneChat</h1>
+        <h1 className="text-5xl font-sans mt-40 text-black">Welcome to TuneChat</h1>
         {session && (
           <>
-            <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>
+            { song ? <Link className="text-2xl text-black font-sans cursor-pointer" href="/chat">→ Go to Chat Rooms</Link> : <p className="text-2xl font-sans opacity-20">→ Go to Chat Rooms</p>}
             <Search search={search} setSearch={setSearch} handleSearch={handleSearch} />
           </>
         )}
