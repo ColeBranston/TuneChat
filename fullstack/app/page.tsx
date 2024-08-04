@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-
+import Search from "./components/Search";
 interface User { // change later
   name: string;
   messages: string
@@ -11,6 +11,8 @@ interface User { // change later
 export default function Home() {
   const [userData, setUserData] = useState<User[]>([]);
   const [newUser, setNewUser] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [song, setSong] = useState<string>(""); // song to search
 
   const { data: session } = useSession();
 
@@ -30,11 +32,21 @@ export default function Home() {
     }
   };
 
+  const handleSearch = () => {
+    // do api call to spotify api to get searhc adn then setSong to the returned song
+    // setSong(song)
+  }
+
   return (
     <main className="flex min-h-screen bg-gradient-to-r from-red-50 to-red-200 flex-col items-center justify-between p-24">
       <div className="flex flex-col gap-[10px]">
-        <h1 className="text-5xl font-sans">Welcome to TuneChat</h1>
-        {session? <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>: null}
+        <h1 className="text-5xl font-sans mt-40">Welcome to TuneChat</h1>
+        {session && (
+          <>
+            <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>
+            <Search search={search} setSearch={setSearch} handleSearch={handleSearch} />
+          </>
+        )}
       </div>
     </main>
   );
