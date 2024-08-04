@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import Search from "./components/Search";
 import MusicModule from "./components/MusicModule";
+import { setConfig } from "next/config";
 
 interface User { // change later
   name: string;
@@ -18,11 +19,17 @@ export default function Home() {
   const [song, setSong] = useState<string>(""); 
   const [artist, setArtist] = useState<string>("");
   const [artistImageUrl, setArtistImageUrl] = useState<string>("");
+  const [inRoom, setInRoom] = useState<boolean>(false);
+  
   const [actualSearch, setActualSearch] = useState<string>("")
 
   const { data: session } = useSession();
+  const [email, setEmail] = useState<string>(session?.user?.email);
   const accessToken = session?.accessToken;
   
+  useEffect(() => {
+      setEmail(session?.user.email);
+  }, [session])
 
   const handleNewUser = async () => {
     
@@ -107,6 +114,25 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Error fetching data from Spotify API:", error);
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/artist', {
+        method: "POST",
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify({
+          email:email,
+          artist:artist
+        })
+      })
+      if (response.ok) {
+        console.log("Success!");
+        setInRoom(true);
+      }
+    } catch (error) {
+      console.error("Something went wrong with posting to chatroom\n\n" + error);
     }
   };
 
