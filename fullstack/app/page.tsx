@@ -18,6 +18,7 @@ export default function Home() {
   const [song, setSong] = useState<string>(""); 
   const [artist, setArtist] = useState<string>("");
   const [artistImageUrl, setArtistImageUrl] = useState<string>("");
+  const [actualSearch, setActualSearch] = useState<string>("")
 
   const { data: session } = useSession();
   const accessToken = session?.accessToken;
@@ -75,6 +76,7 @@ export default function Home() {
   }, [artist, accessToken]);
 
   const handleSearch = async () => {
+    setActualSearch(search)
     console.log(accessToken);
     const api = `https://api.spotify.com/v1/search?q=${encodeURIComponent(search)}&type=track`;
     
@@ -114,9 +116,9 @@ export default function Home() {
         <h1 className="text-5xl font-sans mt-40 text-black">Welcome to TuneChat</h1>
         {session && (
           <>
-            <Search search={search} setSearch={setSearch} handleSearch={handleSearch} />
-            {search && song && artistImageUrl && 
-              <MusicModule img={artistImageUrl} title={search} artist={artist} />
+            <Search search={search} setSearch={setSearch} setActualSearch={setActualSearch} handleSearch={handleSearch} />
+            {actualSearch && song && artistImageUrl && 
+              <MusicModule img={artistImageUrl} title={actualSearch} artist={artist} />
             }          
           </>
         )}
