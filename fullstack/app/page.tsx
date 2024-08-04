@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from 'next/link';
 import logo1 from '../public/logo1.png';
 import Imae from 'next/image';
+import { useSession } from 'next-auth/react';
 
 interface User {
   name: string;
@@ -12,6 +13,8 @@ interface User {
 export default function Home() {
   const [userData, setUserData] = useState<User[]>([]);
   const [newUser, setNewUser] = useState<string>("");
+
+  const { data: session } = useSession();
 
   const handleNewUser = async () => {
     try {
@@ -36,6 +39,10 @@ export default function Home() {
             <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>
             <Image src={logo1} alt="Logo" width={100} />
         </div>
+      <div className="flex flex-col gap-[10px]">
+        <h1 className="text-5xl font-sans">Welcome to TuneChat</h1>
+        {session? <Link className="text-2xl font-sans" href="/chat">→ Go to Chat Rooms</Link>: null}
+      </div>
     </main>
   );
 }
