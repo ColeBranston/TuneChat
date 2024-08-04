@@ -1,7 +1,8 @@
 "use client";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from 'next/link';
+import logo1 from '../public/logo1.png';
+import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import Search from "./components/Search";
 interface User { // change later

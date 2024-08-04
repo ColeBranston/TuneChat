@@ -102,11 +102,7 @@ export default function Chat() {
     };
 
     return (
-        <div className='h-screen flex flex-col bg-red-50'> 
-            <div className='flex-shrink-0'>          
-                <h1 className='font-sans text-4xl bg-red-400 text-white p-4'>Global Chat Room</h1>
-                <Link href="/" className='inline-block text-sm ml-4 mt-2 mb-2 text-red-600 hover:text-red-800'>← Back to home</Link>
-            </div>    
+        <div className='h-screen flex flex-col bg-red-50'>    
             <div className="flex-grow overflow-y-auto px-4 py-2">
                 <div className="flex flex-col space-y-4">
                     {messages.map((msg, index) => {
