@@ -115,26 +115,34 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching data from Spotify API:", error);
     }
-
-    try {
-      const response = await fetch('http://localhost:3000/api/artist', {
-        method: "POST",
-        headers: {
-          'Content-Type':'application/json'
-        },
-        body: JSON.stringify({
-          email:email,
-          artist:artist
-        })
-      })
-      if (response.ok) {
-        console.log("Success!");
-        setInRoom(true);
-      }
-    } catch (error) {
-      console.error("Something went wrong with posting to chatroom\n\n" + error);
-    }
   };
+  useEffect(()=>{
+
+    const makeRoom = async () => {
+      try {
+        console.log("Email:", email);
+        console.log("Artist:", artist);
+        const response = await fetch('http://localhost:3000/api/artist', {
+          method: "POST",
+          headers: {
+            'Content-Type':'application/json'
+          },
+          body: JSON.stringify({
+            email:email,
+            artist:artist
+          })
+        })
+        if (response.ok) {
+          console.log("Success!");
+          setInRoom(true);
+        }
+      } catch (error) {
+        console.error("Something went wrong with posting to chatroom\n\n" + error);
+      }
+    }
+    makeRoom();
+    
+  }, [artist])
 
   return (
     <main className="flex min-h-screen bg-gradient-to-r from-red-50 to-red-200 flex-col items-center justify-between p-24">

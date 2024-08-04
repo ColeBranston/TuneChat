@@ -30,12 +30,12 @@ export async function POST(req: Request) {
             user.chatroom = id;
             await user.save();
             return new Response(JSON.stringify({ message: 'New chatroom made'}))
-        } else {
-            const chatroomId = chatroom.chatroom; 
-            user.chatroom = chatroomId;
-            await user.save();
-            return new Response(JSON.stringify({ message: 'User added to chatroom'}))
-        }
+        } 
+        
+        const chatroomId = chatroom.chatroom; 
+        user.chatroom = chatroom.chatroom;
+        await user.save();
+        return new Response(JSON.stringify({ message: 'User added to chatroom'}))
 
     } catch (error) {
         console.error('Error:', error);

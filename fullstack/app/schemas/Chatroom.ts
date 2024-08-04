@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const ChatroomSchema = new Schema({
     chatroom: { type: String, required: true, unique: true, default: uuidv4 },
-    chat_history: { type: [String] },
+    chat_history: { type: [String], default: [] },
     artist: { type: String }
 });
 
