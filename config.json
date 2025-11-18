@@ -1,6 +1,6 @@
 {
   "Name": "TuneChat",
-  "Description": null,
+  "Description": "A dynamic social media app that mathces users in chat rooms based on favourite musicians using Next.js, MongoDB, WebSockets, and Spotify API for NextStep Hacks 2024.",
   "Cover_Image": "",
-  "Main_ReadMe": ""
+  "Main_ReadMe": "./README.md"
 }
